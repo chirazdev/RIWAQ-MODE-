@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RIWAQ | ريواق — متجر الأناقة الجزائرية</title>
+<meta name="description" content="متجر إلكتروني جزائري فاخر: ملابس، أحذية، حقائب، ساعات، ملابس تقليدية ومستحضرات تجميل. توصيل لجميع الولايات، الدفع عند الاستلام.">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#F9F8F6;
+  --surface:#FFFFFF;
+  --glass:rgba(255,255,255,.75);
+  --glass-strong:rgba(255,255,255,.9);
+  --ink:#0F1115;
+  --muted:#5E616A;
+  --line:rgba(15,17,21,.08);
+  --midnight:#0F1115;
+  --midnight-2:#2A2F3A;
+  --gold:#C8A45C;
+  --gold-soft:rgba(200,164,92,.12);
+  --cream:#F4EFE6;
+  --danger:#B64444;
+  --ok:#2E7D5B;
+  --r-xl:28px; --r-lg:22px; --r-md:16px; --r-sm:12px;
+  --shadow-soft:0 10px 34px rgba(15,17,21,.06);
+  --shadow-lift:0 18px 48px rgba(15,17,21,.1);
+  --ease:cubic-bezier(.22,.8,.26,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg); color:var(--ink);
+  min-height:100vh; line-height:1.6;
+}
+button{cursor:pointer;border:none;background:none;color:inherit;font:inherit}
+input,select{font:inherit;color:inherit}
+img{display:block;max-width:100%}
+::selection{background:var(--gold-soft)}
+
+/* ============ NAVBAR ============ */
+.nav{
+  position:sticky;top:0;z-index:60;
+  backdrop-filter:blur(22px);
+  background:var(--glass);
+  border-bottom:1px solid var(--line);
+}
+.nav-in{
+  max-width:1240px;margin:0 auto;padding:12px 20px;
+  display:flex;align-items:center;gap:14px;
+}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo-mark{
+  width:40px;height:40px;border-radius:14px;
+  background:var(--midnight);color:#fff;
+  display:grid;place-items:center;font-weight:800;font-size:1.05rem;
+}
+.logo-txt{font-weight:800;font-size:1.12rem}
+.logo-txt small{display:block;font-size:.62rem;color:var(--gold);text-transform:uppercase}
+.searchbox{
+  flex:1;display:flex;align-items:center;gap:9px;
+  background:rgba(15,17,21,.04);border-radius:999px;padding:10px 16px;
+}
+.searchbox input{border:none;background:none;outline:none;width:100%;font-size:.92rem}
+.nav-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{
+  width:42px;height:42px;border-radius:14px;
+  display:grid;place-items:center;background:rgba(15,17,21,.04);
+  position:relative;
+}
+.icon-btn:hover{background:#fff;box-shadow:var(--shadow-soft)}
+.icon-btn .count{
+  position:absolute;top:-4px;inset-inline-end:-4px;
+  min-width:19px;height:19px;border-radius:999px;
+  background:var(--gold);color:#fff;font-size:.66rem;font-weight:700;
+  display:grid;place-items:center;opacity:0;transform:scale(.5);
+  transition:all .3s;
+}
+.icon-btn .count.on{opacity:1;transform:scale(1)}
+.icon-btn.active{background:var(--midnight);color:#fff}
+.lang-btn{
+  padding:0 16px;height:42px;border-radius:14px;font-weight:700;
+  background:rgba(15,17,21,.04);
+}
+
+/* ============ CATEGORIES ============ */
+.cats{
+  display:flex;gap:10px;overflow-x:auto;padding:22px 2px 8px;
+  scrollbar-width:none;
+}
+.cats::-webkit-scrollbar{display:none}
+.chip{
+  flex-shrink:0;padding:10px 18px;border-radius:999px;
+  background:var(--glass-strong);border:1px solid var(--line);
+  font-size:.88rem;font-weight:600;white-space:nowrap;
+}
+.chip.on{
+  background:var(--midnight);color:#fff;border-color:var(--midnight);
+}
+
+/* ============ TOOLBAR ============ */
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 2px 4px;flex-wrap:wrap;
+}
+.toolbar h1{font-size:1.32rem;font-weight:800}
+.tb-actions{display:flex;gap:9px}
+.pill-btn,.sort-sel{
+  padding:9px 17px;border-radius:999px;font-size:.85rem;font-weight:600;
+  background:var(--glass-strong);border:1px solid var(--line);
+}
+
+/* ============ FILTERS ============ */
+.filters{
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .5s,opacity .4s;
+}
+.filters.open{max-height:820px;opacity:1;margin:14px 0}
+.filters-in{
+  background:var(--glass-strong);border:1px solid var(--line);
+  border-radius:var(--r-xl);padding:24px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;
+}
+.f-group label{display:block;font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:9px}
+.f-group select,.f-group input{
+  width:100%;padding:11px 14px;border-radius:var(--r-md);
+  border:1px solid var(--line);background:#fff;font-size:.88rem;
+}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{
+  width:30px;height:30px;border-radius:50%;border:2px solid #fff;
+  cursor:pointer;box-shadow:0 0 0 1px var(--line);
+}
+.sw.on{box-shadow:0 0 0 2px var(--gold)}
+.size-tags{display:flex;gap:7px;flex-wrap:wrap}
+.stag{
+  padding:6px 13px;border-radius:10px;font-size:.8rem;font-weight:600;
+  background:#fff;border:1px solid var(--line);cursor:pointer;
+}
+.stag.on{background:var(--midnight);color:#fff}
+.f-actions{grid-column:1/-1;display:flex;gap:10px;justify-content:flex-end}
+.btn-ghost{
+  padding:10px 22px;border-radius:999px;font-weight:600;
+  border:1px solid var(--line);background:#fff;
+}
+.btn-dark{
+  padding:10px 26px;border-radius:999px;font-weight:700;color:#fff;
+  background:var(--midnight);
+}
+
+/* ============ GRID ============ */
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+.grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+  gap:22px;padding:20px 0 60px;
+}
+.card{
+  background:var(--surface);border-radius:var(--r-lg);
+  overflow:hidden;box-shadow:var(--shadow-soft);
+  display:flex;flex-direction:column;
+  opacity:0;transform:translateY(18px);transition:all .35s;
+}
+.card.vis{opacity:1;transform:translateY(0)}
+.card:hover{transform:translateY(-7px);box-shadow:var(--shadow-lift)}
+.card-media{
+  position:relative;aspect-ratio:3/4;overflow:hidden;
+  background:var(--cream);
+}
+.card-media .ph{
+  position:absolute;inset:0;display:grid;place-items:center;
+  font-size:3rem;opacity:.3;
+}
+.card-media img{
+  width:100%;height:100%;object-fit:cover;
+}
+.badge{
+  position:absolute;top:12px;inset-inline-start:12px;z-index:2;
+  padding:5px 11px;border-radius:999px;
+  background:var(--gold);color:#fff;font-size:.72rem;font-weight:800;
+}
+.fav{
+  position:absolute;top:10px;inset-inline-end:10px;z-index:2;
+  width:38px;height:38px;border-radius:50%;
+  background:rgba(255,255,255,.8);display:grid;place-items:center;
+}
+.fav.on svg{fill:var(--danger);stroke:var(--danger)}
+.card-body{padding:15px 16px 17px;display:flex;flex-direction:column;gap:5px;flex:1}
+.card-brand{font-size:.68rem;font-weight:700;color:var(--gold);text-transform:uppercase}
+.card-name{font-size:.98rem;font-weight:700}
+.card-desc{font-size:.78rem;color:var(--muted)}
+.card-price{display:flex;align-items:baseline;gap:9px;margin-top:5px}
+.price{font-size:1.08rem;font-weight:800}
+.old{font-size:.8rem;color:var(--muted);text-decoration:line-through}
+.card-cta{display:flex;gap:8px;margin-top:11px}
+.btn-order{
+  flex:1;padding:11px;border-radius:999px;font-weight:700;color:#fff;
+  background:var(--midnight);
+}
+.btn-detail{
+  flex:1;padding:11px;border-radius:999px;font-weight:600;
+  background:rgba(15,17,21,.05);
+}
+.empty{
+  grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--muted);
+}
+
+/* ============ MODAL ============ */
+.overlay{
+  position:fixed;inset:0;z-index:100;
+  background:rgba(15,17,21,.35);backdrop-filter:blur(8px);
+  display:grid;place-items:center;padding:18px;
+  opacity:0;pointer-events:none;transition:opacity .35s;
+}
+.overlay.open{opacity:1;pointer-events:auto}
+.sheet{
+  width:100%;max-width:880px;max-height:92vh;overflow-y:auto;
+  background:var(--glass-strong);border-radius:var(--r-xl);
+  transform:translateY(28px);transition:transform .45s;
+}
+.overlay.open .sheet{transform:translateY(0)}
+.sheet-close{
+  position:sticky;top:14px;inset-inline-start:calc(100% - 56px);z-index:5;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.9);display:grid;place-items:center;
+}
+.detail{display:grid;grid-template-columns:1fr 1fr}
+.d-media{
+  min-height:420px;background:var(--cream);
+  display:grid;place-items:center;overflow:hidden;position:relative;
+}
+.d-media .ph{position:absolute;font-size:4.5rem;opacity:.3}
+.d-media img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
+.d-body{padding:34px 30px;display:flex;flex-direction:column;gap:14px}
+.d-brand{font-size:.72rem;font-weight:700;color:var(--gold);text-transform:uppercase}
+.d-name{font-size:1.5rem;font-weight:800}
+.d-price{display:flex;align-items:baseline;gap:12px}
+.d-price .price{font-size:1.55rem}
+.save{padding:4px 11px;border-radius:999px;background:var(--gold-soft);color:var(--gold);font-size:.75rem;font-weight:800}
+.qty{display:flex;align-items:center;gap:14px}
+.qty button{
+  width:38px;height:38px;border-radius:12px;background:#fff;
+  border:1px solid var(--line);font-size:1.1rem;font-weight:700;
+}
+.meta-tag{
+  padding:5px 13px;border-radius:999px;background:rgba(15,17,21,.05);
+  font-size:.74rem;color:var(--muted);
+}
+
+/* ============ ORDER FORM ============ */
+.order-wrap{padding:30px}
+.order-head{text-align:center;margin-bottom:22px}
+.order-head h3{font-size:1.3rem;font-weight:800}
+.o-summary{
+  display:flex;gap:14px;align-items:center;
+  background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:13px;margin-bottom:20px;
+}
+.o-summary .thumb{
+  width:62px;height:62px;border-radius:var(--r-md);overflow:hidden;
+  background:var(--cream);display:grid;place-items:center;
+}
+.o-summary .thumb img{width:100%;height:100%;object-fit:cover}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{font-size:.78rem;font-weight:700;color:var(--muted)}
+.field input,.field select{
+  padding:13px 15px;border-radius:var(--r-md);
+  border:1px solid var(--line);background:#fff;font-size:.9rem;
+}
+.field .err{font-size:.72rem;color:var(--danger);font-weight:600;display:none}
+.field.invalid input,.field.invalid select{border-color:var(--danger)}
+.field.invalid .err{display:block}
+.dlv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dlv-opt{
+  padding:14px;border-radius:var(--r-md);border:1.5px solid var(--line);
+  background:#fff;cursor:pointer;text-align:center;
+}
+.dlv-opt.on{border-color:var(--gold);background:rgba(200,164,92,.06)}
+.totals{
+  margin-top:20px;background:#fff;border:1px solid var(--line);
+  border-radius:var(--r-lg);padding:18px 20px;
+}
+.trow{display:flex;justify-content:space-between;padding:4px 0;color:var(--muted)}
+.trow.grand{border-top:1px dashed var(--line);margin-top:9px;padding-top:12px;font-weight:800;color:var(--ink);font-size:1.05rem}
+.cod-note{
+  margin-top:14px;padding:11px 15px;border-radius:var(--r-md);
+  background:var(--gold-soft);color:#8a6d33;font-size:.79rem;font-weight:600;
+}
+.submit-order{width:100%;margin-top:18px;padding:15px;font-size:.95rem}
+
+/* ============ SUCCESS ============ */
+.success{padding:56px 30px;text-align:center}
+.success .ck{
+  width:82px;height:82px;border-radius:50%;margin:0 auto 20px;
+  background:var(--ok);display:grid;place-items:center;color:#fff;
+}
+
+/* ============ TOAST ============ */
+.toast{
+  position:fixed;bottom:26px;inset-inline-start:50%;transform:translateX(50%) translateY(80px);
+  z-index:200;padding:13px 24px;border-radius:999px;
+  background:var(--midnight);color:#fff;
+  opacity:0;transition:all .45s;
+}
+[dir="ltr"] .toast{transform:translateX(-50%) translateY(80px)}
+.toast.show{opacity:1;transform:translateX(50%) translateY(0)}
+[dir="ltr"] .toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ============ ADMIN ============ */
+.admin-btn{
+  position:fixed;bottom:24px;inset-inline-end:24px;z-index:150;
+  width:50px;height:50px;border-radius:50%;
+  background:var(--gold);color:#fff;display:grid;place-items:center;font-size:1.3rem;
+}
+.admin-overlay{
+  position:fixed;inset:0;z-index:180;background:rgba(15,17,21,.4);
+  backdrop-filter:blur(8px);display:grid;place-items:center;padding:18px;
+  opacity:0;pointer-events:none;transition:opacity .35s;
+}
+.admin-overlay.open{opacity:1;pointer-events:auto}
+.admin-sheet{
+  width:100%;max-width:960px;max-height:90vh;overflow-y:auto;
+  background:var(--glass-strong);border-radius:var(--r-xl);padding:30px 28px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:860px){
+  .detail{grid-template-columns:1fr}
+  .d-media{min-height:300px}
+}
+@media(max-width:768px){
+  .grid{grid-template-columns:repeat(2,1fr);gap:13px}
+  .card-body{padding:11px 12px}
+  .card-desc{display:none}
+  .nav-in{flex-wrap:wrap}
+  .searchbox{order:3;flex-basis:100%}
+  .form-grid{grid-template-columns:1fr}
+  .d-body{padding:24px 20px}
+  .order-wrap{padding:22px 18px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ NAVBAR ══════════ -->
+<header class="nav">
+  <div class="nav-in">
+    <a class="logo" href="#" onclick="resetAll(event)">
+      <span class="logo-mark">R</span>
+      <span class="logo-txt">RIWAQ<small data-i18n="tagline">أناقة جزائرية</small></span>
+    </a>
+    <div class="searchbox">
+      <span>🔍</span>
+      <input id="search" type="search" data-i18n-ph="searchPh" placeholder="ابحث عن منتج، ماركة…">
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="favBtn" onclick="toggleFavView()">❤️<span class="count" id="favCount">0</span></button>
+      <button class="lang-btn" id="langBtn" onclick="switchLang()">FR</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="cats" id="cats"></nav>
+  <div class="toolbar">
+    <h1><span id="secTitle" data-i18n="allProducts">كل المنتجات</span><span id="resCount"></span></h1>
+    <div class="tb-actions">
+      <button class="pill-btn" id="filterToggle" onclick="toggleFilters()">⚙️ <span data-i18n="filters">فلاتر</span></button>
+      <select class="sort-sel" id="sortSel" onchange="state.sort=this.value;renderGrid()">
+        <option value="feat" data-i18n="sortFeat">الأكثر تميزًا</option>
+        <option value="priceAsc" data-i18n="sortAsc">السعر: من الأقل</option>
+        <option value="priceDesc" data-i18n="sortDesc">السعر: من الأعلى</option>
+        <option value="sale" data-i18n="sortSale">التخفيضات أولًا</option>
+      </select>
+    </div>
+  </div>
+
+  <section class="filters" id="filters">
+    <div class="filters-in">
+      <div class="f-group"><label data-i18n="fAud">الفئة</label><select id="fAud" onchange="state.f.aud=this.value"><option value="">الكل</option><option value="men">رجال</option><option value="women">نساء</option><option value="kids">أطفال</option><option value="baby">رضّع</option></select></div>
+      <div class="f-group"><label data-i18n="fBrand">العلامة التجارية</label><select id="fBrand" onchange="state.f.brand=this.value"></select></div>
+      <div class="f-group"><label data-i18n="fSeason">الموسم</label><select id="fSeason" onchange="state.f.season=this.value"><option value="">الكل</option><option value="summer">صيف</option><option value="winter">شتاء</option><option value="allSeason">كل المواسم</option></select></div>
+      <div class="f-group"><label data-i18n="fPrice">السعر الأقصى (دج)</label><input type="number" id="fPrice" min="0" step="500" placeholder="بدون حد" oninput="state.f.maxPrice=this.value?+this.value:null"></div>
+      <div class="f-group"><label data-i18n="fSize">المقاس</label><div class="size-tags" id="fSizes"></div></div>
+      <div class="f-group"><label data-i18n="fColor">اللون</label><div class="swatches" id="fColors"></div></div>
+      <div class="f-actions">
+        <button class="btn-ghost" onclick="resetFilters()">إعادة تعيين</button>
+        <button class="btn-dark" onclick="applyFilters()">تطبيق الفلاتر</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid" id="grid"></section>
+</main>
+
+<footer style="border-top:1px solid var(--line);padding:36px 20px;text-align:center;margin-top:20px">
+  <p>© 2026 <b>RIWAQ</b> — جميع الحقوق محفوظة 🇩🇿</p>
+</footer>
+
+<!-- ══════════ MODALS ══════════ -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="sheet">
+    <button class="sheet-close" onclick="closeModal()">✕</button>
+    <div id="sheetContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<button class="admin-btn" onclick="openAdmin()">⚙️</button>
+
+<div class="admin-overlay" id="adminOverlay" onclick="if(event.target===this)closeAdmin()">
+  <div class="admin-sheet" id="adminSheet"></div>
+</div>
+
+<script>
+/* ════════════════════ I18N ════════════════════ */
+const I18N = {
+  ar:{
+    tagline:'أناقة جزائرية', searchPh:'ابحث عن منتج، ماركة…', allProducts:'كل المنتجات',
+    filters:'فلاتر', sortFeat:'الأكثر تميزًا', sortAsc:'السعر: من الأقل', sortDesc:'السعر: من الأعلى', sortSale:'التخفيضات أولًا',
+    fAud:'الفئة', fBrand:'العلامة التجارية', fSeason:'الموسم', fPrice:'السعر الأقصى (دج)', fSize:'المقاس', fColor:'اللون',
+    reset:'إعادة تعيين', apply:'تطبيق الفلاتر',
+    orderNow:'اطلب الآن', details:'عرض التفاصيل', dzd:'دج', save:'وفّر',
+    size:'المقاس', color:'اللون', qty:'الكمية', brand:'الماركة', season:'الموسم',
+    emptyT:'لا توجد نتائج مطابقة', emptyP:'جرّب تعديل الفلاتر أو البحث بكلمات أخرى',
+    favs:'المفضلة', addedFav:'أُضيف إلى المفضلة ♥', removedFav:'حُذف من المفضلة',
+    orderTitle:'إتمام الطلب', orderSub:'املأ معلوماتك وسنتصل بك لتأكيد الطلب',
+    name:'الاسم الكامل', namePh:'مثال: وائل بن أحمد', nameErr:'يرجى إدخال الاسم الكامل',
+    phone:'رقم الهاتف', phonePh:'05 / 06 / 07 …', phoneErr:'رقم غير صحيح',
+    wilaya:'الولاية', wilayaPh:'اختر ولايتك', wilayaErr:'يرجى اختيار الولاية',
+    commune:'البلدية', communePh:'اكتب اسم بلديتك', communeErr:'يرجى إدخال البلدية',
+    address:'العنوان (اختياري)', addressPh:'الحي، الشارع…',
+    delivery:'طريقة التوصيل', dlvHome:'توصيل للمنزل', dlvDesk:'مكتب التوصيل', dlvSelect:'اختر الولاية أولًا',
+    productT:'المنتج', deliveryT:'التوصيل', total:'المجموع الكلي',
+    cod:'الدفع نقدًا عند الاستلام — بدون أي دفع مسبق',
+    confirm:'تأكيد الطلب ✓',
+    okT:'تم استلام طلبك بنجاح!', okP:'سيتصل بك فريقنا خلال 24 ساعة لتأكيد الطلب.',
+    backShop:'مواصلة التسوق',
+    result:'نتيجة', results:'نتيجة',
+    adminTitle:'غرفة المسؤول · الطلبات الواردة', adminSub:'جميع الطلبات المسجلة في المتجر',
+    adminEmpty:'لا توجد طلبات بعد.',
+    markDone:'تم', newStatus:'جديد', doneStatus:'مُعالج',
+    cats:{all:'الكل',men:'رجال',women:'نساء',kids:'أطفال',baby:'رضّع',cloth:'ملابس',shoes:'أحذية',bags:'حقائب',acc:'إكسسوارات',watch:'ساعات',sport:'رياضة',trad:'تقليدي جزائري',beauty:'تجميل'},
+    colors:{white:'أبيض',black:'أسود',beige:'بيج',navy:'كحلي',red:'أحمر',pink:'وردي',green:'أخضر',gold:'ذهبي',brown:'بني',blue:'أزرق',gray:'رمادي',purple:'بنفسجي'}
+  },
+  fr:{
+    tagline:'Élégance algérienne', searchPh:'Rechercher un produit…', allProducts:'Tous les produits',
+    filters:'Filtres', sortFeat:'En vedette', sortAsc:'Prix croissant', sortDesc:'Prix décroissant', sortSale:'Promos',
+    fAud:'Catégorie', fBrand:'Marque', fSeason:'Saison', fPrice:'Prix max (DA)', fSize:'Taille', fColor:'Couleur',
+    reset:'Réinitialiser', apply:'Appliquer',
+    orderNow:'Commander', details:'Détails', dzd:'DA', save:'Économisez',
+    size:'Taille', color:'Couleur', qty:'Quantité', brand:'Marque', season:'Saison',
+    emptyT:'Aucun résultat', emptyP:'Modifiez les filtres ou la recherche',
+    favs:'Favoris', addedFav:'Ajouté aux favoris ♥', removedFav:'Retiré des favoris',
+    orderTitle:'Commande', orderSub:'Remplissez vos informations',
+    name:'Nom complet', namePh:'Ex : Wail Benahmed', nameErr:'Nom requis',
+    phone:'Téléphone', phonePh:'05 / 06 / 07 …', phoneErr:'Numéro invalide',
+    wilaya:'Wilaya', wilayaPh:'Choisissez', wilayaErr:'Wilaya requise',
+    commune:'Commune', communePh:'Saisissez', communeErr:'Commune requise',
+    address:'Adresse (optionnel)', addressPh:'Quartier, rue…',
+    delivery:'Livraison', dlvHome:'Domicile', dlvDesk:'Point relais', dlvSelect:'Choisissez wilaya',
+    productT:'Produit', deliveryT:'Livraison', total:'Total',
+    cod:'Paiement à la livraison',
+    confirm:'Confirmer ✓',
+    okT:'Commande reçue !', okP:'Notre équipe vous appellera sous 24h.',
+    backShop:'Continuer',
+    result:'résultat', results:'résultats',
+    adminTitle:'Admin · Commandes', adminSub:'Toutes les commandes',
+    adminEmpty:'Aucune commande.',
+    markDone:'Terminé', newStatus:'Nouveau', doneStatus:'Traité',
+    cats:{all:'Tout',men:'Hommes',women:'Femmes',kids:'Enfants',baby:'Bébés',cloth:'Vêtements',shoes:'Chaussures',bags:'Sacs',acc:'Accessoires',watch:'Montres',sport:'Sport',trad:'Traditionnel',beauty:'Beauté'},
+    colors:{white:'Blanc',black:'Noir',beige:'Beige',navy:'Marine',red:'Rouge',pink:'Rose',green:'Vert',gold:'Doré',brown:'Marron',blue:'Bleu',gray:'Gris',purple:'Violet'}
+  }
+};
+
+/* ════════════════════ DATA ════════════════════ */
+const COLOR_HEX = {white:'#FDFDFD',black:'#1B1B1E',beige:'#D9C7A7',navy:'#1B2A4A',red:'#B33A3A',pink:'#E8A0B4',green:'#3E6B4F',gold:'#C6A15B',brown:'#7A5230',blue:'#3E6BB0',gray:'#9A9AA2',purple:'#6B4E8E'};
+
+const WILAYAS = [
+[1,'أدرار','Adrar',900,600],[2,'الشلف','Chlef',550,350],[3,'الأغواط','Laghouat',700,450],
+[4,'أم البواقي','Oum El Bouaghi',600,400],[5,'باتنة','Batna',600,400],[6,'بجاية','Béjaïa',550,350],
+[7,'بسكرة','Biskra',650,400],[8,'بشار','Béchar',900,600],[9,'البليدة','Blida',450,300],
+[10,'البويرة','Bouira',500,350],[11,'تمنراست','Tamanrasset',1200,800],[12,'تبسة','Tébessa',700,450],
+[13,'تلمسان','Tlemcen',600,400],[14,'تيارت','Tiaret',600,400],[15,'تيزي وزو','Tizi Ouzou',500,350],
+[16,'الجزائر','Alger',400,250],[17,'الجلفة','Djelfa',650,400],[18,'جيجل','Jijel',600,400],
+[19,'سطيف','Sétif',550,350],[20,'سعيدة','Saïda',650,400],[21,'سكيكدة','Skikda',600,400],
+[22,'سيدي بلعباس','Sidi Bel Abbès',600,400],[23,'عنابة','Annaba',600,400],[24,'قالمة','Guelma',650,400],
+[25,'قسنطينة','Constantine',550,350],[26,'المدية','Médéa',500,350],[27,'مستغانم','Mostaganem',550,350],
+[28,'المسيلة','M\'Sila',600,400],[29,'معسكر','Mascara',600,400],[30,'ورقلة','Ouargla',800,500],
+[31,'وهران','Oran',500,350],[32,'البيض','El Bayadh',800,500],[33,'إليزي','Illizi',1400,900],
+[34,'برج بوعريريج','Bordj Bou Arreridj',550,350],[35,'بومرداس','Boumerdès',450,300],[36,'الطارف','El Tarf',650,400],
+[37,'تندوف','Tindouf',1400,900],[38,'تيسمسيلت','Tissemsilt',600,400],[39,'الوادي','El Oued',750,450],
+[40,'خنشلة','Khenchela',650,400],[41,'سوق أهراس','Souk Ahras',650,400],[42,'تيبازة','Tipaza',450,300],
+[43,'ميلة','Mila',600,400],[44,'عين الدفلى','Aïn Defla',550,350],[45,'النعامة','Naâma',800,500],
+[46,'عين تموشنت','Aïn Témouchent',600,400],[47,'غرداية','Ghardaïa',750,450],[48,'غليزان','Relizane',600,400],
+[49,'تيميمون','Timimoun',1000,650],[50,'برج باجي مختار','Bordj Badji Mokhtar',1400,900],
+[51,'أولاد جلال','Ouled Djellal',700,450],[52,'بني عباس','Béni Abbès',1000,650],[53,'عين صالح','In Salah',1200,800],
+[54,'عين قزام','In Guezzam',1400,900],[55,'تقرت','Touggourt',800,500],[56,'جانت','Djanet',1400,900],
+[57,'المغير','El M\'Ghair',750,450],[58,'المنيعة','El Meniaa',900,600]
+];
+
+/* ═══════════════ نظام روابط الصور - ضع روابطك هنا ═══════════════ */
+// استبدل هذه الروابط بروابط صورك الحقيقية
+// كل رابط يجب أن يكون رابط مباشر لصورة (ينتهي بـ .jpg, .png, .webp)
+
+const IMAGE_URLS = {
+  1: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF07bZg86UdPLTQbSCMM33cJn9CIxpY-Hfg_NuCLDazyCl1bJsGQIqk1Pg&s=10',  // قميص رجالي
+  2: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9ufBNoG5bnyxawQ3KYiILRrD_xF6_unvqBcQyr51QJKjNyCwlvUOOOLom&s=10',  // تيشيرت
+  3: 'https://m.media-amazon.com/images/I/41UoxaC9YTL._AC_SY1000_.jpg',  // بدلة
+  4: 'https://cdn.salla.sa/WqrAj/a9de1d21-7ae6-48d9-b8da-92e497d5827c-811.84336198663x1000-y1vekjh9oIyGclYAH7MRf4D6HBZbNIZozeZOhD8M.jpg',  // فستان
+  5: 'https://img.mstaml.com/i167922888591250038/%D8%AA%D8%B5%D9%85%D9%8A%D9%85-%D9%82%D9%81%D8%B7%D8%A7%D9%86-%D8%B1%D9%85%D8%B6%D8%A7%D9%86-2023-%D8%A7%D9%84%D8%AC%D8%B0%D8%A7%D8%A8%D8%A9-%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%D9%83%D8%A7%D9%85%D9%84%D8%A9-%D9%82%D9%81%D8%B7%D8%A7%D9%86-%D9%86%D8%B3%D8%A7%D8%A6%D9%8A.jpg',  // قفطان
+  6: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTcT3yz7m0Ig5zUvOJi9LLRkukaqNjJPgKYGIcUun4lp0TU_obO6zej18&s=10',  // كاراكو
+  7: 'https://i.pinimg.com/736x/46/f1/0c/46f10c69b580ded72c70b4205f2e2926.jpg',  // جبة قبائلية
+  8: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH7Z6-cQAZ6DL_n9R57a9qahUJpD1q6ETfvWvtPFqZ2sif-ALoMBAE9kJp&s=10',  // برنوس
+  9: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCaJfZe5Ev3XmRuV38D3DsbEKQtwtBU-9cDJoSzcqbThPdSvsCwSQKYJ8&s=10',  // فستان بناتي
+  10: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=600', // طقم رضيع
+  11: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnxI5nIYRaCf3Me2PiQPODHWlPqqUXpgMqbhNq48X_neBm7qJz-PM4olk&s=10', // سنيكرز
+  12: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRk2KreuFyz-j_ExJ9_PmM84TesUtwTVQPeLZhJneQEPO7DV9b7u1-bYVo&s=10', // حذاء جري
+  13: 'https://m.media-amazon.com/images/I/51RJDbfilXS._AC_UF1000,1000_QL80_.jpg', // كعب
+  14: 'https://cdn.salla.sa/DAZab/614268f6-de95-4d55-aa56-310201c4da9d-666.66666666667x1000-rueLmg4ENCPcvMVoIu5qyUB74UPQVTTBl12dB9u3.jpg', // حقيبة يد
+  15: 'https://assets.adidas.com/images/w_1880,f_auto,q_auto/d4feca328bd64aedae5de1eaf29cd2d2_9366/JM7149_01_00_standard.jpg', // حقيبة ظهر
+  16: 'https://cdn.salla.sa/gGPZZ/PjnhrsWht6ThhF0UH1SXCXp7BKwxkvGCsNkUEaOw.jpg', // ساعة رجالي
+  17: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4ROV3jHsdmUK_91Vuk1wkqYAFs56N-0HRVm0ZmhaOzQ&s', // ساعة نسائي
+  18: 'https://cdn.dsmcdn.com/mnresize/420/620/ty1696/prod/QC_PREP/20250618/08/73196587-0e37-3903-abcf-1b02c018a452/1_org_zoom.jpg', // نظارات
+  19: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQomXhclh4txpdctv8N-KfmHR8eDP35u3cR1DncdmptP8UcQtTEwMWfHoPh&s=10', // طقم رياضي
+  20: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyZJC4ljgjyGTrK3-E3vJGqPXNwsJ24BPMqbEGeiqyphkGVZtoVMKl2XU&s=10', // جوغينغ
+  21: 'https://cdn.salla.sa/KjPXlV/e40142fc-d23f-47d6-9703-057e34417032-1000x1000-6Woaf0tFT8kTGZU2l63gR3iyI6X0luCekEG6xutv.jpg', // عطر
+  22: 'https://cdn.salla.sa/vXzKXZ/3547d417-12c5-4a33-895e-c098d5d795c5-1000x1000-kqY1eonKKUH3gFMR302VPAitqfjBTjjty6FwIEqu.jpg', // مكياج
+  23: 'https://lilasmagasin.com/wp-content/uploads/2025/04/enouva-5.jpg', // حجاب
+  24: 'https://m.media-amazon.com/images/I/41fP8-DK6DL._AC_SY350_.jpg'  // حزام
+};
+
+function getImageSrc(productId) {
+  // استخدم الرابط من المصفوفة، وإذا لم يوجد استخدم صورة افتراضية
+  return IMAGE_URLS[productId] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600';
+}
+/* ════════════════════ نهاية نظام روابط الصور ════════════════════ */
+
+/* ════════════════════ بيانات المنتجات ════════════════════ */
+const PRODUCTS = [
+{id:1, cat:'cloth', aud:'men', brand:'RIWAQ', season:'summer', price:3900, old:4900, name:{ar:'قميص كتان رجالي', fr:'Chemise en lin'}, desc:{ar:'قميص كتان فاخر بقصة عصرية مريحة، مثالي لأيام الصيف الأنيقة.', fr:'Chemise en lin premium à coupe moderne.'}, sizes:['S','M','L','XL','XXL'], colors:['white','beige','navy']},
+{id:2, cat:'cloth', aud:'men', brand:'Casbah', season:'allSeason', price:1900, old:2500, name:{ar:'تيشيرت قطن أساسي', fr:'T-shirt coton'}, desc:{ar:'قطن 100% بملمس ناعم وخياطة متينة، قطعة أساسية لكل خزانة.', fr:'100% coton doux et coutures solides.'}, sizes:['S','M','L','XL'], colors:['white','black','gray','navy']},
+{id:3, cat:'cloth', aud:'men', brand:'RIWAQ', season:'winter', price:15900, old:null, name:{ar:'بدلة رسمية سليم فيت', fr:'Costume slim fit'}, desc:{ar:'بدلة أنيقة بقصة سليم وقماش إيطالي، للمناسبات والأعراس.', fr:'Costume élégant coupe slim.'}, sizes:['48','50','52','54','56'], colors:['navy','black','gray']},
+{id:4, cat:'cloth', aud:'women', brand:'Numidia', season:'summer', price:8900, old:11900,  name:{ar:'فستان سهرة راقٍ', fr:'Robe de soirée'}, desc:{ar:'فستان سهرة بتصميم انسيابي وتفاصيل مطرزة تلمع بأناقة.', fr:'Robe fluide aux détails brodés.'}, sizes:['36','38','40','42','44'], colors:['black','red','navy']},
+{id:5, cat:'trad', aud:'women', brand:'Casbah', season:'allSeason', price:24900, old:null,  name:{ar:'قفطان جزائري مطرّز', fr:'Caftan brodé'}, desc:{ar:'قفطان بتطريز يدوي بخيوط ذهبية، تراث جزائري بلمسة عصرية.', fr:'Caftan brodé main au fil doré.'}, sizes:['S','M','L','XL'], colors:['gold','green','purple']},
+{id:6, cat:'trad', aud:'women', brand:'Casbah', season:'allSeason', price:29900, old:34900,  name:{ar:'كاراكو عاصمي فاخر', fr:'Karakou de luxe'}, desc:{ar:'كاراكو مخمل مطرز بالمجبود والفتلة، قطعة استثنائية للأعراس.', fr:'Karakou en velours brodé.'}, sizes:['S','M','L','XL'], colors:['navy','red','black']},
+{id:7, cat:'trad', aud:'women', brand:'Djurdjura', season:'summer', price:12900, old:null,  name:{ar:'جبة قبائلية أصيلة', fr:'Robe kabyle'}, desc:{ar:'جبة قبائلية بألوان زاهية وأشرطة تقليدية منسوجة بإتقان.', fr:'Robe kabyle aux couleurs vives.'}, sizes:['S','M','L','XL','XXL'], colors:['white','red','green']},
+{id:8, cat:'trad', aud:'men', brand:'Djurdjura', season:'winter', price:18900, old:21900,  name:{ar:'برنوس صوف أصيل', fr:'Burnous en laine'}, desc:{ar:'برنوس من الصوف الطبيعي الخالص، حياكة تقليدية تدفئك بفخامة.', fr:'Burnous en laine naturelle.'}, sizes:['M','L','XL'], colors:['white','beige','brown']},
+{id:9, cat:'cloth', aud:'kids', brand:'RIWAQ', season:'summer', price:3500, old:4200, name:{ar:'فستان بناتي صيفي', fr:'Robe fille été'}, desc:{ar:'فستان قطني خفيف بألوان مرحة، مريح للعب طوال اليوم.', fr:'Robe légère en coton.'}, sizes:['4','6','8','10','12'], colors:['pink','white','blue']},
+{id:10, cat:'cloth', aud:'baby', brand:'RIWAQ', season:'allSeason', price:2200, old:null, name:{ar:'طقم رضيع قطن عضوي', fr:'Ensemble bébé bio'}, desc:{ar:'قطن عضوي ناعم على بشرة رضيعك، 3 قطع بتصميم لطيف.', fr:'Coton bio tout doux pour bébé.'}, sizes:['0-3M','3-6M','6-12M'], colors:['white','beige','pink']},
+{id:11, cat:'shoes', aud:'men', brand:'Sahara', season:'allSeason', price:7900, old:9500,  name:{ar:'سنيكرز جلد أبيض', fr:'Sneakers cuir blanc'}, desc:{ar:'سنيكرز بجلد ناعم ونعل مريح، أناقة يومية بلا مجهود.', fr:'Sneakers en cuir souple.'}, sizes:['40','41','42','43','44','45'], colors:['white','black']},
+{id:12, cat:'sport', aud:'men', brand:'Sahara', season:'allSeason', price:9500, old:null, name:{ar:'حذاء جري احترافي', fr:'Running pro'}, desc:{ar:'مصمم للجري بوسادة هوائية وامتصاص مثالي للصدمات.', fr:'Conçues pour la course.'}, sizes:['40','41','42','43','44'], colors:['red','black','blue']},
+{id:13, cat:'shoes', aud:'women', brand:'Numidia', season:'allSeason', price:6500, old:7900, name:{ar:'كعب كلاسيكي أنيق', fr:'Escarpins classiques'}, desc:{ar:'كعب متوسط مريح بتصميم خالد يناسب كل الإطلالات.', fr:'Talon moyen confortable.'}, sizes:['36','37','38','39','40'], colors:['black','beige','red']},
+{id:14, cat:'bags', aud:'women', brand:'Numidia', season:'allSeason', price:8500, old:null, name:{ar:'حقيبة يد جلد طبيعي', fr:'Sac cuir véritable'}, desc:{ar:'جلد طبيعي فاخر بتشطيبات ذهبية، رفيقة أناقتك اليومية.', fr:'Cuir véritable et finitions dorées.'}, sizes:['One Size'], colors:['brown','black','beige']},
+{id:15, cat:'bags', aud:'unisex', brand:'Sahara', season:'allSeason', price:4500, old:5500, name:{ar:'حقيبة ظهر عملية', fr:'Sac à dos urbain'}, desc:{ar:'حقيبة عصرية بجيوب ذكية وحماية للحاسوب، للدراسة والعمل.', fr:'Compartiments malins.'}, sizes:['One Size'], colors:['black','gray','navy']},
+{id:16, cat:'watch', aud:'men', brand:'RIWAQ', season:'allSeason', price:12500, old:14900, name:{ar:'ساعة كلاسيكية فضية', fr:'Montre classique'}, desc:{ar:'ميناء أنيق وسوار معدني مقاوم، فخامة على معصمك.', fr:'Cadran raffiné et bracelet métal.'}, sizes:['One Size'], colors:['gray','gold']},
+{id:17, cat:'watch', aud:'women', brand:'Numidia', season:'allSeason', price:9900, old:null, name:{ar:'ساعة نسائية بسوار جلد', fr:'Montre femme cuir'}, desc:{ar:'تصميم رقيق بسوار جلدي ناعم، أناقة بسيطة لا تُنسى.', fr:'Design délicat et bracelet cuir.'}, sizes:['One Size'], colors:['brown','black','gold']},
+{id:18, cat:'acc', aud:'unisex', brand:'Sahara', season:'summer', price:3200, old:3900, name:{ar:'نظارات شمسية UV400', fr:'Lunettes soleil UV400'}, desc:{ar:'حماية كاملة من الأشعة بإطار خفيف وتصميم جذاب.', fr:'Protection totale UV.'}, sizes:['One Size'], colors:['black','brown','gold']},
+{id:19, cat:'sport', aud:'women', brand:'Sahara', season:'allSeason', price:5500, old:6800, name:{ar:'طقم رياضي نسائي', fr:'Ensemble sport femme'}, desc:{ar:'قماش مرن يتنفس ويرافق حركتك، للتمرين واليوغا.', fr:'Tissu stretch respirant.'}, sizes:['S','M','L','XL'], colors:['black','purple','pink']},
+{id:20, cat:'sport', aud:'men', brand:'Casbah', season:'allSeason', price:3200, old:null,  name:{ar:'سروال رياضي جوغينغ', fr:'Jogging premium'}, desc:{ar:'قطن مدعّم مريح بقصة عصرية، للرياضة والإطلالة الكاجوال.', fr:'Molleton confortable.'}, sizes:['S','M','L','XL','XXL'], colors:['gray','black','navy']},
+{id:21, cat:'beauty', aud:'women', brand:'Numidia', season:'allSeason', price:7500, old:8900,  name:{ar:'عطر شرقي فاخر 100مل', fr:'Parfum oriental 100ml'}, desc:{ar:'نفحات العود والعنبر والياسمين، ثبات يدوم طوال اليوم.', fr:'Notes de oud, ambre et jasmin.'}, sizes:['100ml'], colors:['gold']},
+{id:22, cat:'beauty', aud:'women', brand:'Numidia', season:'allSeason', price:4900, old:null, name:{ar:'طقم مكياج متكامل', fr:'Coffret maquillage'}, desc:{ar:'كل ما تحتاجينه في علبة أنيقة: ظلال، أحمر شفاه، وأكثر.', fr:'Coffret chic complet.'}, sizes:['One Size'], colors:['pink','red']},
+{id:23, cat:'acc', aud:'women', brand:'Casbah', season:'allSeason', price:1200, old:1600,  name:{ar:'حجاب شيفون حريري', fr:'Hijab mousseline'}, desc:{ar:'شيفون ناعم ينسدل بأناقة، متوفر بألوان هادئة راقية.', fr:'Mousseline douce au tombé élégant.'}, sizes:['One Size'], colors:['beige','pink','navy','white']},
+{id:24, cat:'acc', aud:'men', brand:'RIWAQ', season:'allSeason', price:2500, old:null, name:{ar:'حزام جلد إيطالي', fr:'Ceinture cuir italien'}, desc:{ar:'جلد طبيعي متين بإبزيم معدني أنيق، تفصيلة تصنع الفرق.', fr:'Cuir véritable robuste.'}, sizes:['90','95','100','105'], colors:['brown','black']}
+];
+
+const CATS = [
+ {id:'all',kind:null,em:'🏷️'},{id:'men',kind:'aud',em:'👔'},{id:'women',kind:'aud',em:'👗'},
+ {id:'kids',kind:'aud',em:'🧒'},{id:'baby',kind:'aud',em:'🍼'},{id:'cloth',kind:'cat',em:'👕'},
+ {id:'shoes',kind:'cat',em:'👟'},{id:'bags',kind:'cat',em:'👜'},{id:'acc',kind:'cat',em:'🕶️'},
+ {id:'watch',kind:'cat',em:'⌚'},{id:'sport',kind:'cat',em:'🏃'},{id:'trad',kind:'cat',em:'✨'},{id:'beauty',kind:'cat',em:'💄'}
+];
+
+/* ════════════════════ STATE ════════════════════ */
+const LS = {get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}, set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const state = {
+  lang: LS.get('riwaq_lang','ar'),
+  chip:'all', query:'', sort:'feat', favView:false,
+  favs: LS.get('riwaq_favs',[]),
+  f:{aud:'',brand:'',season:'',maxPrice:null,size:'',color:''},
+  applied:{aud:'',brand:'',season:'',maxPrice:null,size:'',color:''},
+  sel:{id:null,size:null,color:null,qty:1,dlv:null,wilaya:''}
+};
+const t = k => I18N[state.lang][k] ?? k;
+const fmt = n => n.toLocaleString(state.lang==='ar'?'ar-DZ':'fr-DZ');
+const $ = s => document.querySelector(s);
+
+/* ════════════════════ LANG ════════════════════ */
+function applyLang(){
+  document.documentElement.lang = state.lang;
+  document.documentElement.dir  = state.lang==='ar' ? 'rtl' : 'ltr';
+  $('#langBtn').textContent = state.lang==='ar' ? 'FR' : 'ع';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{ el.placeholder = t(el.dataset.i18nPh); });
+  document.title = state.lang==='ar' ? 'RIWAQ | ريواق — متجر الأناقة الجزائرية' : 'RIWAQ — Boutique de mode algérienne';
+  renderCats(); renderBrandSel(); renderSizeTags(); renderSwatches(); renderGrid();
+}
+function switchLang(){
+  state.lang = state.lang==='ar' ? 'fr' : 'ar';
+  LS.set('riwaq_lang',state.lang);
+  applyLang();
+  if($('#overlay').classList.contains('open')) closeModal();
+}
+
+/* ════════════════════ CATS ════════════════════ */
+function renderCats(){
+  $('#cats').innerHTML = CATS.map(c=>`
+    <button class="chip ${state.chip===c.id?'on':''}" onclick="pickChip('${c.id}')">
+      ${c.em} ${I18N[state.lang].cats[c.id]}
+    </button>`).join('');
+}
+function pickChip(id){
+  state.chip = id; state.favView = false;
+  $('#favBtn').classList.remove('active');
+  renderCats(); renderGrid();
+}
+
+/* ════════════════════ FILTERS ════════════════════ */
+function renderBrandSel(){
+  const brands=[...new Set(PRODUCTS.map(p=>p.brand))];
+  $('#fBrand').innerHTML = `<option value="">الكل</option>` + brands.map(b=>`<option value="${b}" ${state.f.brand===b?'selected':''}>${b}</option>`).join('');
+  $('#fAud').value = state.f.aud;
+  $('#fSeason').value = state.f.season;
+  $('#fPrice').value = state.f.maxPrice ?? '';
+}
+function renderSizeTags(){
+  const sizes=['S','M','L','XL','XXL','36','38','40','42','44'];
+  $('#fSizes').innerHTML = sizes.map(s=>`<button class="stag ${state.f.size===s?'on':''}" onclick="state.f.size=state.f.size==='${s}'?'':'${s}';renderSizeTags()">${s}</button>`).join('');
+}
+function renderSwatches(){
+  $('#fColors').innerHTML = Object.keys(COLOR_HEX).map(c=>`
+    <button class="sw ${state.f.color===c?'on':''}" style="background:${COLOR_HEX[c]}"
+      onclick="state.f.color=state.f.color==='${c}'?'':'${c}';renderSwatches()"></button>`).join('');
+}
+function toggleFilters(){
+  $('#filters').classList.toggle('open');
+  $('#filterToggle').classList.toggle('on');
+}
+function applyFilters(){
+  state.applied = {...state.f};
+  renderGrid();
+  $('#filters').classList.remove('open');
+  $('#filterToggle').classList.remove('on');
+}
+function resetFilters(){
+  state.f = {aud:'',brand:'',season:'',maxPrice:null,size:'',color:''};
+  state.applied = {...state.f};
+  renderBrandSel(); renderSizeTags(); renderSwatches(); renderGrid();
+}
+
+/* ════════════════════ GRID ════════════════════ */
+function filtered(){
+  const q = state.query.trim().toLowerCase();
+  const a = state.applied;
+  let list = PRODUCTS.filter(p=>{
+    if(state.favView && !state.favs.includes(p.id)) return false;
+    const c = CATS.find(x=>x.id===state.chip);
+    if(c && c.kind==='aud' && p.aud!==c.id) return false;
+    if(c && c.kind==='cat' && p.cat!==c.id) return false;
+    if(a.aud && p.aud!==a.aud) return false;
+    if(a.brand && p.brand!==a.brand) return false;
+    if(a.season && p.season!==a.season) return false;
+    if(a.maxPrice && p.price>a.maxPrice) return false;
+    if(a.size && !p.sizes.includes(a.size)) return false;
+    if(a.color && !p.colors.includes(a.color)) return false;
+    if(q){
+      const hay = (p.name.ar+' '+p.name.fr+' '+p.brand).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  if(state.sort==='priceAsc')  list.sort((x,y)=>x.price-y.price);
+  if(state.sort==='priceDesc') list.sort((x,y)=>y.price-x.price);
+  if(state.sort==='sale')      list.sort((x,y)=>(y.old?(y.old-y.price)/y.old:0)-(x.old?(x.old-x.price)/x.old:0));
+  return list;
+}
+function renderGrid(){
+  const list = filtered();
+  $('#secTitle').textContent = state.favView ? t('favs')
+    : state.chip==='all' ? t('allProducts') : I18N[state.lang].cats[state.chip];
+  $('#resCount').textContent = ` · ${list.length} ${t('result')}`;
+  if(!list.length){
+    $('#grid').innerHTML = `<div class="empty"><p>🔍 ${t('emptyT')}</p><p>${t('emptyP')}</p></div>`;
+    return;
+  }
+  $('#grid').innerHTML = list.map(p=>{
+    const off = p.old ? Math.round((p.old-p.price)/p.old*100) : 0;
+    return `
+    <article class="card" data-id="${p.id}">
+      <div class="card-media">
+        <span class="ph">${p.em}</span>
+        ${off?`<span class="badge">-${off}%</span>`:''}
+        <button class="fav ${state.favs.includes(p.id)?'on':''}" onclick="toggleFav(${p.id},this)">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#17171A" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </button>
+        <img src="${getImageSrc(p.id)}" alt="${p.name[state.lang]}" onerror="this.style.display='none';this.parentElement.querySelector('.ph').style.display='grid'">
+      </div>
+      <div class="card-body">
+        <span class="card-brand">${p.brand}</span>
+        <h3 class="card-name">${p.name[state.lang]}</h3>
+        <p class="card-desc">${p.desc[state.lang]}</p>
+        <div class="card-price">
+          <span class="price">${fmt(p.price)} ${t('dzd')}</span>
+          ${p.old?`<span class="old">${fmt(p.old)}</span>`:''}
+        </div>
+        <div class="card-cta">
+          <button class="btn-order" onclick="openProduct(${p.id},true)">${t('orderNow')}</button>
+          <button class="btn-detail" onclick="openProduct(${p.id},false)">${t('details')}</button>
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+  observeCards();
+}
+
+/* ════════════════════ OBSERVE ════════════════════ */
+let io;
+function observeCards(){
+  io?.disconnect();
+  io = new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('vis'); io.unobserve(e.target); }
+  }),{threshold:.08});
+  document.querySelectorAll('.card').forEach(c=>io.observe(c));
+}
+
+/* ════════════════════ FAVORITES ════════════════════ */
+function toggleFav(id,btn){
+  const i = state.favs.indexOf(id);
+  if(i>-1){ state.favs.splice(i,1); btn?.classList.remove('on'); toast(t('removedFav')); }
+  else{ state.favs.push(id); btn?.classList.add('on'); toast(t('addedFav')); }
+  LS.set('riwaq_favs',state.favs);
+  updateFavCount();
+  if(state.favView) renderGrid();
+}
+function updateFavCount(){
+  const c=$('#favCount');
+  c.textContent = state.favs.length;
+  c.classList.toggle('on', state.favs.length>0);
+}
+function toggleFavView(){
+  state.favView = !state.favView;
+  $('#favBtn').classList.toggle('active',state.favView);
+  if(state.favView){ state.chip='all'; renderCats(); }
+  renderGrid();
+}
+function resetAll(e){
+  e?.preventDefault();
+  state.chip='all'; state.favView=false; state.query='';
+  $('#search').value=''; $('#favBtn').classList.remove('active');
+  resetFilters(); renderCats(); renderGrid();
+}
+
+/* ════════════════════ PRODUCT MODAL ════════════════════ */
+function openProduct(id, toOrder){
+  const p = PRODUCTS.find(x=>x.id===id);
+  state.sel = {id, size:p.sizes[0], color:p.colors[0], qty:1, dlv:null, wilaya:''};
+  const off = p.old ? Math.round((p.old-p.price)/p.old*100) : 0;
+  $('#sheetContent').innerHTML = `
+  <div class="detail">
+    <div class="d-media">
+      <span class="ph">${p.em}</span>
+      <img src="${getImageSrc(p.id)}" alt="${p.name[state.lang]}" onerror="this.style.display='none';this.parentElement.querySelector('.ph').style.display='grid'">
+    </div>
+    <div class="d-body">
+      <span class="d-brand">${p.brand}</span>
+      <h2 class="d-name">${p.name[state.lang]}</h2>
+      <p class="d-desc">${p.desc[state.lang]}</p>
+      <div class="d-price">
+        <span class="price">${fmt(p.price)} ${t('dzd')}</span>
+        ${p.old?`<span class="old">${fmt(p.old)}</span><span class="save">${t('save')} ${off}%</span>`:''}
+      </div>
+      <div>
+        <span class="opt-label">${t('size')}</span>
+        <div class="size-tags" id="dSizes">${p.sizes.map(s=>`<button class="stag ${state.sel.size===s?'on':''}" onclick="pickOpt('size','${s}')">${s}</button>`).join('')}</div>
+      </div>
+      <div>
+        <span class="opt-label">${t('color')}</span>
+        <div class="swatches" id="dColors">${p.colors.map(c=>`<button class="sw ${state.sel.color===c?'on':''}" style="background:${COLOR_HEX[c]}" onclick="pickOpt('color','${c}')"></button>`).join('')}</div>
+      </div>
+      <div>
+        <span class="opt-label">${t('qty')}</span>
+        <div class="qty">
+          <button onclick="chQty(-1)">−</button><b id="qtyV">1</b><button onclick="chQty(1)">+</button>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span class="meta-tag">${t('brand')}: ${p.brand}</span>
+        <span class="meta-tag">${t('season')}: ${t(p.season)}</span>
+      </div>
+      <button class="btn-dark submit-order" onclick="showOrderForm()">${t('orderNow')}</button>
+    </div>
+  </div>
+  <div id="orderZone"></div>`;
+  $('#overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  if(toOrder) setTimeout(showOrderForm, 120);
+}
+function pickOpt(kind,val){
+  state.sel[kind]=val;
+  const p = PRODUCTS.find(x=>x.id===state.sel.id);
+  if(kind==='size') $('#dSizes').innerHTML = p.sizes.map(s=>`<button class="stag ${state.sel.size===s?'on':''}" onclick="pickOpt('size','${s}')">${s}</button>`).join('');
+  else $('#dColors').innerHTML = p.colors.map(c=>`<button class="sw ${state.sel.color===c?'on':''}" style="background:${COLOR_HEX[c]}" onclick="pickOpt('color','${c}')"></button>`).join('');
+  if($('#orderZone').innerHTML) refreshTotals();
+}
+function chQty(d){
+  state.sel.qty = Math.min(10, Math.max(1, state.sel.qty+d));
+  $('#qtyV').textContent = state.sel.qty;
+  if($('#orderZone').innerHTML) refreshTotals();
+}
+function closeModal(){
+  $('#overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ════════════════════ ORDER FORM ════════════════════ */
+function showOrderForm(){
+  const p = PRODUCTS.find(x=>x.id===state.sel.id);
+  const wOpts = WILAYAS.map(w=>`<option value="${w[0]}">${w[0]} — ${state.lang==='ar'?w[1]:w[2]}</option>`).join('');
+  $('#orderZone').innerHTML = `
+  <div class="order-wrap" id="orderForm">
+    <div class="order-head"><h3>${t('orderTitle')}</h3><p>${t('orderSub')}</p></div>
+    <div class="o-summary">
+      <div class="thumb"><img src="${getImageSrc(p.id)}" alt="" onerror="this.outerHTML='<span>${p.em}</span>'"></div>
+      <div class="info"><b>${p.name[state.lang]}</b><span id="oSpec"></span></div>
+      <span class="p" id="oSub"></span>
+    </div>
+    <div class="form-grid">
+      <div class="field" id="fName"><label>${t('name')} *</label><input type="text" id="iName" placeholder="${t('namePh')}"><span class="err">${t('nameErr')}</span></div>
+      <div class="field" id="fPhone"><label>${t('phone')} *</label><input type="tel" id="iPhone" placeholder="${t('phonePh')}" maxlength="10"><span class="err">${t('phoneErr')}</span></div>
+      <div class="field" id="fWilaya"><label>${t('wilaya')} *</label><select id="iWilaya" onchange="onWilaya(this.value)"><option value="">${t('wilayaPh')}</option>${wOpts}</select><span class="err">${t('wilayaErr')}</span></div>
+      <div class="field" id="fCommune"><label>${t('commune')} *</label><input type="text" id="iCommune" placeholder="${t('communePh')}"><span class="err">${t('communeErr')}</span></div>
+      <div class="field full"><label>${t('address')}</label><input type="text" id="iAddress" placeholder="${t('addressPh')}"></div>
+      <div class="field full">
+        <label>${t('delivery')} *</label>
+        <div class="dlv">
+          <div class="dlv-opt" id="dlvHome" onclick="pickDlv('home')"><b>🏠 ${t('dlvHome')}</b><span id="pHome">${t('dlvSelect')}</span></div>
+          <div class="dlv-opt" id="dlvDesk" onclick="pickDlv('desk')"><b>📦 ${t('dlvDesk')}</b><span id="pDesk">${t('dlvSelect')}</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="totals">
+      <div class="trow"><span>${t('productT')} × <span id="tQty">1</span></span><span id="tSub">—</span></div>
+      <div class="trow"><span>${t('deliveryT')}</span><span id="tDlv">—</span></div>
+      <div class="trow grand"><span>${t('total')}</span><span class="v" id="tGrand">—</span></div>
+    </div>
+    <div class="cod-note">💵 ${t('cod')}</div>
+    <button class="btn-dark submit-order" onclick="submitOrder()">${t('confirm')}</button>
+  </div>`;
+  refreshTotals();
+  $('#orderForm').scrollIntoView({behavior:'smooth'});
+}
+function onWilaya(code){
+  state.sel.wilaya = code;
+  const w = WILAYAS.find(x=>x[0]==code);
+  if(w){ $('#pHome').textContent = `${fmt(w[3])} ${t('dzd')}`; $('#pDesk').textContent = `${fmt(w[4])} ${t('dzd')}`; }
+  else { $('#pHome').textContent = t('dlvSelect'); $('#pDesk').textContent = t('dlvSelect'); }
+  refreshTotals();
+}
+function pickDlv(mode){ state.sel.dlv = mode; $('#dlvHome').classList.toggle('on',mode==='home'); $('#dlvDesk').classList.toggle('on',mode==='desk'); refreshTotals(); }
+function dlvPrice(){ const w = WILAYAS.find(x=>x[0]==state.sel.wilaya); if(!w || !state.sel.dlv) return null; return state.sel.dlv==='home' ? w[3] : w[4]; }
+function refreshTotals(){
+  const p = PRODUCTS.find(x=>x.id===state.sel.id);
+  if(!p || !$('#tSub')) return;
+  const sub = p.price*state.sel.qty, d = dlvPrice();
+  $('#oSpec').textContent = `${t('size')}: ${state.sel.size} · ${I18N[state.lang].colors[state.sel.color]||state.sel.color}`;
+  $('#oSub').textContent = `${fmt(sub)} ${t('dzd')}`;
+  $('#tQty').textContent = state.sel.qty;
+  $('#tSub').textContent = `${fmt(sub)} ${t('dzd')}`;
+  $('#tDlv').textContent = d!=null ? `${fmt(d)} ${t('dzd')}` : '—';
+  $('#tGrand').textContent = d!=null ? `${fmt(sub+d)} ${t('dzd')}` : `${fmt(sub)} ${t('dzd')} +`;
+}
+function submitOrder(){
+  const name = $('#iName').value.trim();
+  const phone = $('#iPhone').value.trim();
+  const wilaya = $('#iWilaya').value;
+  const commune = $('#iCommune').value.trim();
+  let ok = true;
+  const mark=(id,bad)=>{ $(id).classList.toggle('invalid',bad); if(bad) ok=false; };
+  mark('#fName', name.length<3);
+  mark('#fPhone', !/^0[567]\d{8}$/.test(phone));
+  mark('#fWilaya', !wilaya);
+  mark('#fCommune', commune.length<2);
+  if(!state.sel.dlv){ ok=false; $('#dlvHome').style.borderColor='var(--danger)'; $('#dlvDesk').style.borderColor='var(--danger)'; }
+  if(!ok){ $('#orderForm').scrollIntoView({behavior:'smooth'}); return; }
+
+  const p = PRODUCTS.find(x=>x.id===state.sel.id);
+  const w = WILAYAS.find(x=>x[0]==wilaya);
+  const num = 'RW-' + Date.now().toString().slice(-6);
+  const order = {
+    num, date:new Date().toISOString(), status:'new',
+    product:p.name.ar, brand:p.brand, size:state.sel.size, color:state.sel.color, qty:state.sel.qty,
+    unit:p.price, delivery:dlvPrice(), total:p.price*state.sel.qty+dlvPrice(),
+    client:{name, phone, wilaya:w[1], commune, address:$('#iAddress').value.trim(), mode:state.sel.dlv}
+  };
+  const orders = LS.get('riwaq_orders',[]);
+  orders.push(order); LS.set('riwaq_orders',orders);
+
+  $('#sheetContent').innerHTML = `
+  <div class="success">
+    <div class="ck">✓</div>
+    <h3>${t('okT')}</h3>
+    <div class="num">${num}</div>
+    <p>${t('okP')}</p>
+    <button class="btn-dark" style="margin-top:24px;padding:13px 34px" onclick="closeModal()">${t('backShop')}</button>
+  </div>`;
+  $('.sheet').scrollTop = 0;
+}
+
+/* ════════════════════ ADMIN ════════════════════ */
+function openAdmin(){
+  const orders = LS.get('riwaq_orders',[]);
+  const html = orders.length ? orders.map((o,i)=>`
+    <div style="background:#fff;border:1px solid var(--line);border-radius:var(--r-lg);padding:18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <span style="font-weight:800;color:var(--gold)">${o.num}</span>
+        <span style="margin:0 12px">${o.client.name}</span>
+        <span style="color:var(--muted)">${o.product} ×${o.qty}</span>
+        <span class="badge-status" style="background:${o.status==='done'?'#eaf5ea':'var(--gold-soft)'};color:${o.status==='done'?'var(--ok)':'#8a6d33'}">${t(o.status==='done'?'doneStatus':'newStatus')}</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <span style="font-weight:800">${fmt(o.total)} ${t('dzd')}</span>
+        ${o.status==='new' ? `<button onclick="markDone(${i})" style="padding:7px 16px;border-radius:20px;border:1px solid var(--line);background:#fff">✅ ${t('markDone')}</button>` : ''}
+        <button onclick="deleteOrder(${i})" style="padding:7px 16px;border-radius:20px;border:1px solid var(--line);background:#fff">🗑️</button>
+      </div>
+    </div>
+  `).join('') : `<div class="empty">📭 ${t('adminEmpty')}</div>`;
+
+  $('#adminSheet').innerHTML = `
+    <h2>⚙️ ${t('adminTitle')}</h2>
+    <p style="color:var(--muted);margin-bottom:24px">${t('adminSub')} · ${orders.length} ${t('results')}</p>
+    ${html}
+    <button class="btn-ghost" style="margin-top:20px;width:100%" onclick="closeAdmin()">إغلاق</button>
+  `;
+  $('#adminOverlay').classList.add('open');
+}
+function closeAdmin(){ $('#adminOverlay').classList.remove('open'); }
+function markDone(i){
+  const orders = LS.get('riwaq_orders',[]);
+  if(orders[i]) orders[i].status = 'done';
+  LS.set('riwaq_orders',orders);
+  openAdmin();
+}
+function deleteOrder(i){
+  if(!confirm('حذف هذا الطلب؟')) return;
+  const orders = LS.get('riwaq_orders',[]);
+  orders.splice(i,1);
+  LS.set('riwaq_orders',orders);
+  openAdmin();
+}
+
+/* ════════════════════ SEARCH ════════════════════ */
+let deb;
+$('#search').addEventListener('input', e=>{
+  clearTimeout(deb);
+  deb = setTimeout(()=>{ state.query=e.target.value; renderGrid(); }, 220);
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeModal(); closeAdmin(); } });
+
+/* ════════════════════ TOAST ════════════════════ */
+function toast(msg){
+  const el=$('#toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),2400);
+}
+
+/* ════════════════════ INIT ════════════════════ */
+applyLang();
+updateFavCount();
+</script>
+</body>
+</html>
