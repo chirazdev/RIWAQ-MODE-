@@ -174,17 +174,6 @@ img{display:block;max-width:100%}
 .card-media img{
   width:100%;height:100%;object-fit:cover;
 }
-.badge{
-  position:absolute;top:12px;inset-inline-start:12px;z-index:2;
-  padding:5px 11px;border-radius:999px;
-  background:var(--gold);color:#fff;font-size:.72rem;font-weight:800;
-}
-.fav{
-  position:absolute;top:10px;inset-inline-end:10px;z-index:2;
-  width:38px;height:38px;border-radius:50%;
-  background:rgba(255,255,255,.8);display:grid;place-items:center;
-}
-.fav.on svg{fill:var(--danger);stroke:var(--danger)}
 .card-body{padding:15px 16px 17px;display:flex;flex-direction:column;gap:5px;flex:1}
 .card-brand{font-size:.68rem;font-weight:700;color:var(--gold);text-transform:uppercase}
 .card-name{font-size:.98rem;font-weight:700}
@@ -503,38 +492,34 @@ const WILAYAS = [
 ];
 
 /* ═══════════════ نظام روابط الصور - ضع روابطك هنا ═══════════════ */
-// استبدل هذه الروابط بروابط صورك الحقيقية
-// كل رابط يجب أن يكون رابط مباشر لصورة (ينتهي بـ .jpg, .png, .webp)
-
 const IMAGE_URLS = {
-  1: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF07bZg86UdPLTQbSCMM33cJn9CIxpY-Hfg_NuCLDazyCl1bJsGQIqk1Pg&s=10',  // قميص رجالي
-  2: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9ufBNoG5bnyxawQ3KYiILRrD_xF6_unvqBcQyr51QJKjNyCwlvUOOOLom&s=10',  // تيشيرت
-  3: 'https://m.media-amazon.com/images/I/41UoxaC9YTL._AC_SY1000_.jpg',  // بدلة
-  4: 'https://cdn.salla.sa/WqrAj/a9de1d21-7ae6-48d9-b8da-92e497d5827c-811.84336198663x1000-y1vekjh9oIyGclYAH7MRf4D6HBZbNIZozeZOhD8M.jpg',  // فستان
-  5: 'https://img.mstaml.com/i167922888591250038/%D8%AA%D8%B5%D9%85%D9%8A%D9%85-%D9%82%D9%81%D8%B7%D8%A7%D9%86-%D8%B1%D9%85%D8%B6%D8%A7%D9%86-2023-%D8%A7%D9%84%D8%AC%D8%B0%D8%A7%D8%A8%D8%A9-%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%D9%83%D8%A7%D9%85%D9%84%D8%A9-%D9%82%D9%81%D8%B7%D8%A7%D9%86-%D9%86%D8%B3%D8%A7%D8%A6%D9%8A.jpg',  // قفطان
-  6: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTcT3yz7m0Ig5zUvOJi9LLRkukaqNjJPgKYGIcUun4lp0TU_obO6zej18&s=10',  // كاراكو
-  7: 'https://i.pinimg.com/736x/46/f1/0c/46f10c69b580ded72c70b4205f2e2926.jpg',  // جبة قبائلية
-  8: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH7Z6-cQAZ6DL_n9R57a9qahUJpD1q6ETfvWvtPFqZ2sif-ALoMBAE9kJp&s=10',  // برنوس
-  9: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCaJfZe5Ev3XmRuV38D3DsbEKQtwtBU-9cDJoSzcqbThPdSvsCwSQKYJ8&s=10',  // فستان بناتي
-  10: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=600', // طقم رضيع
-  11: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnxI5nIYRaCf3Me2PiQPODHWlPqqUXpgMqbhNq48X_neBm7qJz-PM4olk&s=10', // سنيكرز
-  12: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRk2KreuFyz-j_ExJ9_PmM84TesUtwTVQPeLZhJneQEPO7DV9b7u1-bYVo&s=10', // حذاء جري
-  13: 'https://m.media-amazon.com/images/I/51RJDbfilXS._AC_UF1000,1000_QL80_.jpg', // كعب
-  14: 'https://cdn.salla.sa/DAZab/614268f6-de95-4d55-aa56-310201c4da9d-666.66666666667x1000-rueLmg4ENCPcvMVoIu5qyUB74UPQVTTBl12dB9u3.jpg', // حقيبة يد
-  15: 'https://assets.adidas.com/images/w_1880,f_auto,q_auto/d4feca328bd64aedae5de1eaf29cd2d2_9366/JM7149_01_00_standard.jpg', // حقيبة ظهر
-  16: 'https://cdn.salla.sa/gGPZZ/PjnhrsWht6ThhF0UH1SXCXp7BKwxkvGCsNkUEaOw.jpg', // ساعة رجالي
-  17: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4ROV3jHsdmUK_91Vuk1wkqYAFs56N-0HRVm0ZmhaOzQ&s', // ساعة نسائي
-  18: 'https://cdn.dsmcdn.com/mnresize/420/620/ty1696/prod/QC_PREP/20250618/08/73196587-0e37-3903-abcf-1b02c018a452/1_org_zoom.jpg', // نظارات
-  19: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQomXhclh4txpdctv8N-KfmHR8eDP35u3cR1DncdmptP8UcQtTEwMWfHoPh&s=10', // طقم رياضي
-  20: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyZJC4ljgjyGTrK3-E3vJGqPXNwsJ24BPMqbEGeiqyphkGVZtoVMKl2XU&s=10', // جوغينغ
-  21: 'https://cdn.salla.sa/KjPXlV/e40142fc-d23f-47d6-9703-057e34417032-1000x1000-6Woaf0tFT8kTGZU2l63gR3iyI6X0luCekEG6xutv.jpg', // عطر
-  22: 'https://cdn.salla.sa/vXzKXZ/3547d417-12c5-4a33-895e-c098d5d795c5-1000x1000-kqY1eonKKUH3gFMR302VPAitqfjBTjjty6FwIEqu.jpg', // مكياج
-  23: 'https://lilasmagasin.com/wp-content/uploads/2025/04/enouva-5.jpg', // حجاب
-  24: 'https://m.media-amazon.com/images/I/41fP8-DK6DL._AC_SY350_.jpg'  // حزام
+  1: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRF07bZg86UdPLTQbSCMM33cJn9CIxpY-Hfg_NuCLDazyCl1bJsGQIqk1Pg&s=10',
+  2: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9ufBNoG5bnyxawQ3KYiILRrD_xF6_unvqBcQyr51QJKjNyCwlvUOOOLom&s=10',
+  3: 'https://m.media-amazon.com/images/I/41UoxaC9YTL._AC_SY1000_.jpg',
+  4: 'https://cdn.salla.sa/WqrAj/a9de1d21-7ae6-48d9-b8da-92e497d5827c-811.84336198663x1000-y1vekjh9oIyGclYAH7MRf4D6HBZbNIZozeZOhD8M.jpg',
+  5: 'https://img.mstaml.com/i167922888591250038/%D8%AA%D8%B5%D9%85%D9%8A%D9%85-%D9%82%D9%81%D8%B7%D8%A7%D9%86-%D8%B1%D9%85%D8%B6%D8%A7%D9%86-2023-%D8%A7%D9%84%D8%AC%D8%B0%D8%A7%D8%A8%D8%A9-%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%B9%D8%A7%D8%B1-%D9%83%D8%A7%D9%85%D9%84%D8%A9-%D9%82%D9%81%D8%B7%D8%A7%D9%86-%D9%86%D8%B3%D8%A7%D8%A6%D9%8A.jpg',
+  6: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTcT3yz7m0Ig5zUvOJi9LLRkukaqNjJPgKYGIcUun4lp0TU_obO6zej18&s=10',
+  7: 'https://i.pinimg.com/736x/46/f1/0c/46f10c69b580ded72c70b4205f2e2926.jpg',
+  8: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTH7Z6-cQAZ6DL_n9R57a9qahUJpD1q6ETfvWvtPFqZ2sif-ALoMBAE9kJp&s=10',
+  9: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCaJfZe5Ev3XmRuV38D3DsbEKQtwtBU-9cDJoSzcqbThPdSvsCwSQKYJ8&s=10',
+  10: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=600',
+  11: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnxI5nIYRaCf3Me2PiQPODHWlPqqUXpgMqbhNq48X_neBm7qJz-PM4olk&s=10',
+  12: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRk2KreuFyz-j_ExJ9_PmM84TesUtwTVQPeLZhJneQEPO7DV9b7u1-bYVo&s=10',
+  13: 'https://m.media-amazon.com/images/I/51RJDbfilXS._AC_UF1000,1000_QL80_.jpg',
+  14: 'https://cdn.salla.sa/DAZab/614268f6-de95-4d55-aa56-310201c4da9d-666.66666666667x1000-rueLmg4ENCPcvMVoIu5qyUB74UPQVTTBl12dB9u3.jpg',
+  15: 'https://assets.adidas.com/images/w_1880,f_auto,q_auto/d4feca328bd64aedae5de1eaf29cd2d2_9366/JM7149_01_00_standard.jpg',
+  16: 'https://cdn.salla.sa/gGPZZ/PjnhrsWht6ThhF0UH1SXCXp7BKwxkvGCsNkUEaOw.jpg',
+  17: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4ROV3jHsdmUK_91Vuk1wkqYAFs56N-0HRVm0ZmhaOzQ&s',
+  18: 'https://cdn.dsmcdn.com/mnresize/420/620/ty1696/prod/QC_PREP/20250618/08/73196587-0e37-3903-abcf-1b02c018a452/1_org_zoom.jpg',
+  19: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQomXhclh4txpdctv8N-KfmHR8eDP35u3cR1DncdmptP8UcQtTEwMWfHoPh&s=10',
+  20: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyZJC4ljgjyGTrK3-E3vJGqPXNwsJ24BPMqbEGeiqyphkGVZtoVMKl2XU&s=10',
+  21: 'https://cdn.salla.sa/KjPXlV/e40142fc-d23f-47d6-9703-057e34417032-1000x1000-6Woaf0tFT8kTGZU2l63gR3iyI6X0luCekEG6xutv.jpg',
+  22: 'https://cdn.salla.sa/vXzKXZ/3547d417-12c5-4a33-895e-c098d5d795c5-1000x1000-kqY1eonKKUH3gFMR302VPAitqfjBTjjty6FwIEqu.jpg',
+  23: 'https://lilasmagasin.com/wp-content/uploads/2025/04/enouva-5.jpg',
+  24: 'https://m.media-amazon.com/images/I/41fP8-DK6DL._AC_SY350_.jpg'
 };
 
 function getImageSrc(productId) {
-  // استخدم الرابط من المصفوفة، وإذا لم يوجد استخدم صورة افتراضية
   return IMAGE_URLS[productId] || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600';
 }
 /* ════════════════════ نهاية نظام روابط الصور ════════════════════ */
@@ -691,11 +676,6 @@ function renderGrid(){
     return `
     <article class="card" data-id="${p.id}">
       <div class="card-media">
-        <span class="ph">${p.em}</span>
-        ${off?`<span class="badge">-${off}%</span>`:''}
-        <button class="fav ${state.favs.includes(p.id)?'on':''}" onclick="toggleFav(${p.id},this)">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#17171A" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-        </button>
         <img src="${getImageSrc(p.id)}" alt="${p.name[state.lang]}" onerror="this.style.display='none';this.parentElement.querySelector('.ph').style.display='grid'">
       </div>
       <div class="card-body">
@@ -761,7 +741,6 @@ function openProduct(id, toOrder){
   $('#sheetContent').innerHTML = `
   <div class="detail">
     <div class="d-media">
-      <span class="ph">${p.em}</span>
       <img src="${getImageSrc(p.id)}" alt="${p.name[state.lang]}" onerror="this.style.display='none';this.parentElement.querySelector('.ph').style.display='grid'">
     </div>
     <div class="d-body">
